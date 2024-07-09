@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -16,23 +17,24 @@ export const goods = [
 ];
 
 export const App = () => {
-  const [selectedGood, setGood] = useState('Jam');
+  const [selectedGood, setSelectedGood] = useState('Jam');
+  const reset = () => {
+    setSelectedGood('');
+  };
 
   return (
     <main className="section container">
-      {goods.includes(selectedGood) ? (
+      {selectedGood ? (
         <h1 className="title is-flex is-align-items-center">
           {selectedGood} is selected
-          {goods.includes(selectedGood) ? (
+          {selectedGood && (
             <button
               data-cy="ClearButton"
               type="button"
               className="delete ml-3"
-              onClick={() => {
-                setGood('');
-              }}
+              onClick={reset}
             />
-          ) : null}
+          )}
         </h1>
       ) : (
         <h1 className="title is-flex is-align-items-center">
@@ -44,19 +46,19 @@ export const App = () => {
         <tbody>
           {goods.map(good => (
             <tr
+              key={goods.indexOf(good)}
               data-cy="Good"
-              className={`${good === selectedGood ? 'has-background-success-light' : ''}`}
+              className={cn('', {
+                'has-background-success-light': good === selectedGood,
+              })}
             >
               <td>
-                {' '}
                 {good === selectedGood ? (
                   <button
                     data-cy="RemoveButton"
                     type="button"
                     className="button is-info"
-                    onClick={() => {
-                      setGood(``);
-                    }}
+                    onClick={reset}
                   >
                     -
                   </button>
@@ -66,7 +68,7 @@ export const App = () => {
                     type="button"
                     className="button"
                     onClick={() => {
-                      setGood(`${good}`);
+                      setSelectedGood(`${good}`);
                     }}
                   >
                     +
